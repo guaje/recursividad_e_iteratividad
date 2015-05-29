@@ -1,0 +1,1581 @@
+<!doctype html>
+<html lang="es">
+
+	<head>
+		<meta charset="utf-8">
+
+		<title>Recursividad e Iteratividad</title>
+
+		<meta name="description" content="Recursivity and Iterativity">
+		<meta name="author" content="Javier Guaje">
+
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+		<link rel="stylesheet" href="css/reveal.css">
+		<link rel="stylesheet" href="css/theme/white.css" id="theme">
+
+		<!-- Code syntax highlighting -->
+		<link rel="stylesheet" href="lib/css/dark-blue.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+
+		<!--[if lt IE 9]>
+		<script src="lib/js/html5shiv.js"></script>
+		<![endif]-->
+	</head>
+
+	<body>
+
+		<div class="reveal">
+
+			<!-- Any section element inside of this container is displayed as a slide -->
+			<div class="slides">
+                
+<section data-markdown>
+	# Recursividad e Iteratividad
+	#####Oscar Caicedo
+	#####Yesica Cortes
+	#####Javier Guaje
+	#####Esteban Lizarazo
+	#####Daniel Sabogal
+</section>
+<section data-markdown>
+	# Recursividad
+</section>
+<section>
+	<section data-markdown>
+		## Funciones Recursivas
+	</section>
+
+	<section data-markdown>
+		<script type="text/template">
+		## Funciones Recursivas: Definiciones
+
+		- __Función recursiva__: Es una función que se define en términos de si misma, es decir, que el resultado de la función depende de resultados de la misma función con otros valores.
+
+		- <!-- .element: class="fragment" -->
+		__Punto de ruptura__: Es un  valor del argumento para el cual la función no tiene que ser calculada de nuevo en otros valores.
+		</script>
+	</section>
+
+	<section>
+		<h2>Funciones Recursivas: Ejemplo</h2>
+
+		<p>
+			En este ejemplo se definirá una función recursiva que permita hallar un número real elevado a un número natural.
+		</p>
+
+		<p class="fragment">
+			Para expresar una función que calculé esta operación, en primera instancia se construye la expresión potencia:
+			$$\mathbb{R} \times \mathbb{N} \rightarrow \mathbb{R}$$
+		</p>
+
+		<p class="fragment">
+			que define la función que tiene como entrada un número real que representa la base y un número natural que indica el exponente, y como salida se obtendrá un número real que será la potencia.
+		</p>
+	</section>
+
+	<section>
+		<h2>Funciones Recursivas: Ejemplo</h2>
+
+		<p>
+			Ahora observesé que en general si se tiene una base \(b\) y un exponente \(n\), entonces por definición:
+
+			$$b^n = \underbrace{b * b * b * \dots * b * b}_\text{$n$ veces}$$
+		</p>
+
+		<p class="fragment">
+			si se usa la propiedad asociativa del producto de números reales, se tiene que:
+
+			$$b^n = \underbrace{b * b * b * \dots * b * b}_\text{$n$ veces} = \underbrace{(b * b * \dots * b * b)}_\text{$n-1$ veces} * b$$
+		</p>
+	</section>
+
+	<section>
+		<h2>Funciones Recursivas: Ejemplo</h2>
+
+		<p>
+			lo que es equivalente a:
+
+			$$b^n = \underbrace{(b * b * \dots * b * b)}_\text{$n-1$ veces} * b = b^{n-1} * b$$
+		</p>
+
+		<p class="fragment">
+			A partir de esta observación se puede dar una definición recursiva usando funciones.
+		</p>
+
+		<p class="fragment">
+			* Por facilidad, aquí se asumirá que \(0^0 = 1\).
+		</p>
+	</section>
+
+	<section>
+		<h2>Funciones Recursivas: Ejemplo</h2>
+
+		<p>
+			La declaración de esta función junto con su cuerpo se hará de la siguiente manera:
+		</p>
+
+		<p class="fragment">
+			<i>potencia(b, n)</i> = <i>p</i>
+		</p>
+
+		<p class="fragment">
+			Si se establecen las variables:
+		</p>
+
+		<ul class="fragment">
+			<li>b := Base</li>
+			<li>n := Exponente</li>
+			<li>p := Potencia \(b^n\)</li>
+		</ul>
+	</section>
+
+	<section>
+		<h2>Funciones Recursivas: Ejemplo</h2>
+
+		<p>
+			entonces:
+			<br>
+			$$potencia : \mathbb{R} \times \mathbb{N} \rightarrow \mathbb{R}$$
+			<br>
+			$$􏰄(b, n) \rightarrow \begin{cases} 1, & \text{si $n = 0$;} \\ potencia(b, n - 1) * b, & \text{en otro caso.}\end{cases}$$
+		</p>
+
+		<p class="fragment">
+		</p>
+	</section>
+
+	<section data-markdown>
+		## Funciones Recursivas: Ejemplo en C++
+
+```cpp
+#include &lt;iostream&gt;
+
+using namespace std;
+
+float potencia(float b, int n)
+{
+	if(n == 0)
+	{
+	    return 1;
+	}
+	return potencia(b, n - 1) * b;
+}
+
+int main()
+{
+	float b = 0;
+	int n = 0;
+	float y = 0;
+	cout << "Ingrese la base: \t";
+	cin >> b;
+	cout << "Ingrese el exponente: \t";
+	cin >> n;
+	y = potencia(b, n);
+	cout << b << " elevado a la " << n;
+	cout << " es igual a: " << y << endl;
+
+	return 0;
+}
+```
+	</section>
+
+	<section data-markdown>
+		## Funciones Recursivas: Ejemplo en Python
+
+```python
+def potencia(b, n):
+	if n == 0:
+	    return 1
+	return potencia(b, n - 1) * b
+
+b = float(input("Ingrese la base: \t"))
+n = int(input("Ingrese el exponente: \t"))
+y = potencia(b, n)
+print(str(b) + " elevado a la " + str(n), end="")
+print(" es igual a: " + str(y))
+```
+	</section>
+
+	<section data-markdown>
+		## Funciones Recursivas: Ejemplo
+
+		Supónga que solicita un préstamo de $500.000 durante un año, el prestamista cobra un interés del 10% mensual mediante la modalidad de interes compuesto mes vencido. ¿Cuál es el total del dinero que debe pagar cuando ha transcurrido el año por el cual solicitó el prestamo?
+	</section>
+
+	<section>
+		<h2>Funciones Recursivas: Ejemplo</h2>
+
+		<p>
+			Para calcular el valor solicitado hay que observar que:
+		</p>
+
+		<ul>
+			<li class="fragment">
+				Para cero meses se tiene que hay que pagar
+					$$$500.000$$
+				pues no ha transcurrido ningún mes.
+			</li>
+			<li class="fragment">
+				Para un mes se tiene que hay que pagar
+				$$$500.000 + $500.000 ∗ 0.1 = $$
+				$$[$500.000](1 + 0.1)$$
+				lo prestado más los intereses de un mes.
+			</li>
+		</ul>
+	</section>
+
+	<section>
+		<h2>Funciones Recursivas: Ejemplo</h2>
+
+		<ul>
+			<li>
+				Para dos meses se tiene que hay que pagar
+					$$($500.000 + $500.000 ∗ 0.1)$$
+				lo prestado más los intereses de un mes
+					$$ + ($500.000 + $500.000 * 0.1) * 0.1$$
+				más los intereses de esa cantidad.
+			</li>
+		</ul>
+
+		<p class="fragment">
+			Lo cual es equivalente a:
+			$$[$500.000](1 + 0.1) + [$500.000](1 + 0.1)0.1 = $$
+			$$􏰄[[$500.000](1 + 0.1)]􏰅(1 + 0.1)$$
+		</p>
+	</section>
+
+	<section data-markdown>
+		## Funciones Recursivas: Ejemplo
+
+		A partir de estos ejemplos, se puede determinar la regla recursiva con la que se puede calcular el interés compuesto mes vencido en general, con lo cual se puede diseñar una función recursiva que permita calcular el valor total a pagar para cualquier monto, cualquier interés y cualquier intervalo de tiempo.
+	</section>
+
+	<section>
+		<h2>Funciones Recursivas: Ejemplo</h2>
+
+		<p>
+			Esa función es la siguiente:
+		</p>
+
+		<p>
+			<i>pago(m, i, n)</i> = <i>valor</i>
+		</p>
+
+		<div class="fragment">
+			<p>
+				donde se tienen las variables:
+			</p>
+
+			<ul>
+				<li>
+					m := Cantidad de dinero solicitado como prestamo
+				</li>
+				<li>
+					i := Interés
+				</li>
+				<li>
+					n := Número de meses por el cual se solicita el pretamo
+				</li>
+				<li>
+					valor := Valor total a pagar por el prestamo de la cantidad m por n meses con un interés i utilizando el método de interés compuesto mes vencido
+				</li>
+			</ul>
+		</div>
+	</section>
+
+	<section>
+		<h2>Funciones Recursivas: Ejemplo</h2>
+
+		<p>
+			entonces:
+			$$pago : \mathbb{R}^+ \times \mathbb{R}^+ \times \mathbb{Z}^+ \rightarrow \mathbb{R}^+$$
+			$$(m, i, n) \rightarrow \begin{cases} m, & \text{si $n = 0$;} \\ pago(m, i, n-1) * (1 + i), & \text{en otro caso.}\end{cases}$$
+		</p>
+	</section>
+
+	<section data-markdown>
+		## Funciones Recursivas: Ejemplo en C++
+
+```cpp
+#include &lt;iostream&gt;
+
+using namespace std;
+
+float pago(float m, float i, int n)
+{
+	if(n == 0)
+	{
+	    return m;
+	}
+	return pago(m, i, n - 1) * (1 + i);
+}
+
+int main()
+{
+	float m = 0;
+	float i = 0;
+	int n = 0;
+	float y = 0;
+	cout << "Ingrese la cantidad prestada: \t";
+	cin >> m;
+	cout << "Ingrese el interes: \t";
+	cin >> i;
+	cout << "Ingrese el numero de meses: \t";
+	cin >> n;
+	y = pago(m, i, n);
+	cout << "El valor a pagar es: " << y << endl;
+
+	return 0;
+}
+```
+	</section>
+
+	<section data-markdown>
+		## Funciones Recursivas: Ejemplo en Python
+
+```python
+def pago(m, i, n):
+	if n == 0:
+	    return m
+	return pago(m, i, n - 1) * (1 + i)
+
+m = float(input("Ingrese la cantidad prestada: \t"))
+i = float(input("Ingrese el interes: \t"))
+n = int(input("Ingrese el numero de meses: \t"))
+y = pago(m, i, n)
+print("El valor a pagar es: " + str(y))
+```
+	</section>
+
+	<section data-markdown>
+		## Funciones Recursivas: Consideraciones
+
+		Se debe tener mucho cuidado en la definición de funciones recursivas, pues si no se hace bien, la función podría requerir de un cálculo infinito o no ser calculable.
+	</section>
+</section>
+<section data-markdown>
+	# Iteratividad
+</section>
+<section>
+	<section data-markdown>
+		## Para (for)
+	</section>
+
+	<section data-markdown>
+		## Para (for): Definición
+
+		Permite ejecutar un bloque de instrucciones para cada uno de los valores en un intervalo determinado.
+	</section>
+
+	<section data-markdown>
+		## Para (for): Esquema en C++
+
+```cpp
+#include &lt;iostream&gt;
+
+using namespace std;
+
+int main()
+{
+	// Instrucciones
+
+	for(//Variable = //Inicio; //Condicion; //Paso)
+	{
+	    // Instruccion 1
+	    // Instruccion 2
+	    // ...
+	    // Instruccion n
+	}
+
+	// Mas instrucciones
+
+	return 0;
+}
+```
+	</section>
+
+	<section data-markdown>
+		## Para (for): Esquema en Python
+
+```python
+# Instrucciones
+
+for #Variable in range(#Fin):
+	# Instruccion 1
+	# Instruccion 2
+	# ...
+	# Instruccion m
+
+for #Variable in range(#Inicio, #Fin):
+	# Instruccion 1
+	# Instruccion 2
+	# ...
+	# Instruccion n
+
+for #Variable in range(#Inicio, #Fin, #Paso):
+	# Instruccion 1
+	# Instruccion 2
+	# ...
+	# Instruccion o
+
+# Mas instrucciones
+```
+	</section>
+
+	<section data-markdown>
+		## Para (for): Ejemplo
+
+		En este ejemplo se definirá una función iterativa que permita hallar un número real elevado a un número natural.
+	</section>
+
+	<section data-markdown>
+		## Para (for): Ejemplo en C++
+
+```cpp
+#include &lt;iostream&gt;
+
+using namespace std;
+
+float potencia(float b, int n)
+{
+	float resultado = 1;
+	for(int i = n; i > 0; i--)
+	{
+	    resultado *= b;
+	}
+	return resultado;
+}
+
+int main()
+{
+	float b = 0;
+	int n = 0;
+	float y = 0;
+	cout << "Ingrese la base: \t";
+	cin >> b;
+	cout << "Ingrese el exponente: \t";
+	cin >> n;
+	y = potencia(b, n);
+	cout << b << " elevado a la " << n;
+	cout << " es igual a: " << y << endl;
+
+	return 0;
+}
+```
+	</section>
+
+	<section data-markdown>
+		## Para (for): Ejemplo en Python
+
+```python
+def potencia(b, n):
+	resultado = 1
+	for i in range(n, 0, -1):
+	    resultado *= b
+	return resultado
+
+b = float(input("Ingrese la base: \t"))
+n = int(input("Ingrese el exponente: \t"))
+y = potencia(b, n)
+print(str(b) + " elevado a la " + str(n), end="")
+print(" es igual a: " + str(y))
+```
+	</section>
+
+	<section data-markdown>
+		## Para (for): Ejemplo en C++
+
+```cpp
+#include &lt;iostream&gt;
+
+using namespace std;
+
+float potencia(float b, int n)
+{
+	float resultado = 1;
+	for(int i = 1; i <= n; i++)
+	{
+	    resultado *= b;
+	}
+	return resultado;
+}
+
+int main()
+{
+	float b = 0;
+	int n = 0;
+	float y = 0;
+	cout << "Ingrese la base: \t";
+	cin >> b;
+	cout << "Ingrese el exponente: \t";
+	cin >> n;
+	y = potencia(b, n);
+	cout << b << " elevado a la " << n;
+	cout << " es igual a: " << y << endl;
+
+	return 0;
+}
+```
+	</section>
+
+	<section data-markdown>
+		## Para (for): Ejemplo en Python
+
+```python
+def potencia(b, n):
+	resultado = 1
+	for i in range(1, n + 1):
+	    resultado *= b
+	return resultado
+
+b = float(input("Ingrese la base: \t"))
+n = int(input("Ingrese el exponente: \t"))
+y = potencia(b, n)
+print(str(b) + " elevado a la " + str(n), end="")
+print(" es igual a: " + str(y))
+```
+	</section>
+
+	<section>
+		<h2>Para (for): Ejemplo</h2>
+
+		<p>
+			Calcular la suma de los primeros \(n\) números naturales positivos, es decir, calcular el valor de la expresión:
+		</p>
+
+		<p class="fragment">
+			$$1 + 2 + 3 + \dots + (n - 1) + n$$
+		</p>
+
+		<p class="fragment">
+			que abreviadamante se escribe como:
+		</p>
+
+		<p class="fragment">
+			$$\sum\limits_{i = 1}^{n} i$$
+		</p>
+	</section>
+
+	<section data-markdown>
+		## Para (for): Ejemplo en C++
+
+```cpp
+#include &lt;iostream&gt;
+
+using namespace std;
+
+int suma(int n)
+{
+	int s = 0;
+	for(int i = 1; i <= n; i++)
+	{
+	    s += i;
+	}
+	return s;
+}
+
+int main()
+{
+	int n = 0;
+	int y = 0;
+	cout << "Ingrese un numero: \t";
+	cin >> n;
+	y = suma(n);
+	cout << "La suma de los numeros desde 1";
+	cout << " hasta " << n << " es: " << y << endl;
+
+	return 0;
+}
+```
+	</section>
+
+	<section data-markdown>
+		## Para (for): Ejemplo en Python
+
+```python
+def suma(n):
+	s = 0
+	for i in range(1, n + 1):
+	    s += i
+	return s
+
+n = int(input("Ingrese un numero: \t"))
+y = suma(n)
+print("La suma de los numeros desde 1", end="")
+print(" hasta " + str(n) + " es: " + str(y))
+```
+	</section>
+
+	<section>
+		<h2>Para (for): Ejemplo</h2>
+
+		<p>
+			En la construcción de estas funciones aparecen dos variables que tienen una connotación muy importante:
+		</p>
+
+		<ul>
+			<li class="fragment">
+				La variable \(i\) juega el rol de una variable contadora ya que permite llevar el conteo de cuantos ciclos se han efectuado.
+			</li>
+			<li class="fragment">
+				La variable \(s\) juega el rol de variable acumuladora pues en ésta se acumula o almacena el valor parcial que se desea calcular utilizando el ciclo.
+			</li>
+		</ul>
+	</section>
+</section>
+<section>
+	<section data-markdown>
+		## Mientras (while)
+	</section>
+
+	<section data-markdown>
+		<script type="text/template">
+		## Mientras (while): Definiciones
+
+		Permite ejecutar un bloque de instrucciones mientras se cumpla una expresión booleana.
+
+		<!-- .element: class="fragment" -->
+		A esta expresión booleana se le da el nombre de __condición de parada__ y siempre se evalúa antes de ejecutar el bloque de instrucciones.
+
+		- <!-- .element: class="fragment" -->
+		Si la condición no se cumple, el bloque no se ejecuta.
+		- <!-- .element: class="fragment" -->
+		Si la condición se cumple, el bloque se ejecuta, después de lo cual la instrucción vuelve a empezar, es decir, la condición se vuelve a evaluar.
+		</script>
+	</section>
+
+	<section data-markdown>
+		## Mientras (while): Esquema en C++
+
+```cpp
+#include &lt;iostream&gt;
+
+using namespace std;
+
+int main()
+{
+	// Instrucciones
+
+	//Variable = //Inicio;
+	while(//Condicion)
+	{
+	    // Instruccion 1
+	    // Instruccion 2
+	    // ...
+	    // Instruccion n
+	    //Actualizacion de la Variable
+	}
+
+	// Mas instrucciones
+
+	return 0;
+}
+```
+	</section>
+
+	<section data-markdown>
+		## Mientras (while): Esquema en Python
+
+```python
+# Instrucciones
+
+#Variable = #Inicio
+while #Condicion:
+	# Instruccion 1
+	# Instruccion 2
+	# ...
+	# Instruccion n
+	#Actualizacion de la Variable
+
+# Mas instrucciones
+```
+	</section>
+
+	<section data-markdown>
+		## Mientras (while): Ejemplo
+
+		En este ejemplo se definirá una función iterativa que permita hallar un número real elevado a un número natural.
+	</section>
+
+	<section data-markdown>
+		## Mientras (while): Ejemplo en C++
+
+```cpp
+#include &lt;iostream&gt;
+
+using namespace std;
+
+float potencia(float b, int n)
+{
+	float resultado = 1;
+
+	int i = n;
+	while(i > 0)
+	{
+	    resultado *= b;
+	    i--;
+	}
+	return resultado;
+}
+
+int main()
+{
+	float b = 0;
+	int n = 0;
+	float y = 0;
+	cout << "Ingrese la base: \t";
+	cin >> b;
+	cout << "Ingrese el exponente: \t";
+	cin >> n;
+	y = potencia(b, n);
+	cout << b << " elevado a la " << n;
+	cout << " es igual a: " << y << endl;
+
+	return 0;
+}
+```
+	</section>
+
+	<section data-markdown>
+		## Mientras (while): Ejemplo en Python
+
+```python
+def potencia(b, n):
+	resultado = 1
+
+	i = n
+	while i > 0:
+	    resultado *= b
+	    i -= 1
+	return resultado
+
+b = float(input("Ingrese la base: \t"))
+n = int(input("Ingrese el exponente: \t"))
+y = potencia(b, n)
+print(str(b) + " elevado a la " + str(n), end="")
+print(" es igual a: " + str(y))
+```
+	</section>
+
+	<section data-markdown>
+		## Mientras (while): Ejemplo en C++
+
+```cpp
+#include &lt;iostream&gt;
+
+using namespace std;
+
+float potencia(float b, int n)
+{
+	float resultado = 1;
+
+	int i = 1;
+	while(i <= n)
+	{
+	    resultado *= b;
+	    i++;
+	}
+	return resultado;
+}
+
+int main()
+{
+	float b = 0;
+	int n = 0;
+	float y = 0;
+	cout << "Ingrese la base: \t";
+	cin >> b;
+	cout << "Ingrese el exponente: \t";
+	cin >> n;
+	y = potencia(b, n);
+	cout << b << " elevado a la " << n;
+	cout << " es igual a: " << y << endl;
+
+	return 0;
+}
+```
+	</section>
+
+	<section data-markdown>
+		## Mientras (while): Ejemplo en Python
+
+```python
+def potencia(b, n):
+	resultado = 1
+
+	i = 1
+	while i <= n:
+	    resultado *= b
+	    i += 1
+	return resultado
+
+b = float(input("Ingrese la base: \t"))
+n = int(input("Ingrese el exponente: \t"))
+y = potencia(b, n)
+print(str(b) + " elevado a la " + str(n), end="")
+print(" es igual a: " + str(y))
+```
+	</section>
+
+	<section>
+		<h2>Mientras (while): Ejemplo</h2>
+
+		<p>
+			Calcular la suma de los primeros \(n\) números naturales positivos, es decir, calcular el valor de la expresión:
+		</p>
+
+		<p class="fragment">
+			$$1 + 2 + 3 + \dots + (n - 1) + n$$
+		</p>
+
+		<p class="fragment">
+			que abreviadamante se escribe como:
+		</p>
+
+		<p class="fragment">
+			$$\sum\limits_{i = 1}^{n} i$$
+		</p>
+	</section>
+
+	<section data-markdown>
+		## Mientras (while): Ejemplo en C++
+
+```cpp
+#include &lt;iostream&gt;
+
+using namespace std;
+
+int suma(int n)
+{
+	int s = 0;
+
+	int i = 1;
+	while(i <= n)
+	{
+	    s += i;
+	    i++;
+	}
+	return s;
+}
+
+int main()
+{
+	int n = 0;
+	int y = 0;
+	cout << "Ingrese un numero: \t";
+	cin >> n;
+	y = suma(n);
+	cout << "La suma de los numeros desde 1";
+	cout << " hasta " << n << " es: " << y << endl;
+
+	return 0;
+}
+```
+	</section>
+
+	<section data-markdown>
+		## Mientras (while): Ejemplo en Python
+
+```python
+def suma(n):
+	s = 0
+
+	i = 1
+	while i <= n:
+	    s += i
+	    i += 1
+	
+	return s
+
+n = int(input("Ingrese un numero: \t"))
+y = suma(n)
+print("La suma de los numeros desde 1", end="")
+print(" hasta " + str(n) + " es: " + str(y))
+```
+	</section>
+
+	<section>
+		<h2>Mientras (while): Ejemplo</h2>
+
+		<p>
+			En la construcción de estas funciones aparecen dos variables que tienen una connotación muy importante:
+		</p>
+
+		<ul>
+			<li class="fragment">
+				La variable \(i\) juega el rol de una variable contadora ya que permite llevar el conteo de cuantos ciclos se han efectuado.
+			</li>
+			<li class="fragment">
+				La variable \(s\) juega el rol de variable acumuladora pues en ésta se acumula o almacena el valor parcial que se desea calcular utilizando el ciclo.
+			</li>
+		</ul>
+	</section>
+
+	<section data-markdown>
+		<script type="text/template">
+		## Mientras (while): Consideraciones
+
+		- En el caso en que la condición se evalúe la primera vez como falsa, el bloque de instrucciones no será ejecutado, lo cual quiere decir que el número de repeticiones o iteraciones de este bloque será cero.
+
+		- <!-- .element: class="fragment" -->
+		Si la condición siempre evalúa a verdadero, la instrucción se ejecutará indefinidamente, es decir, un número infinito de veces.
+		</script>
+	</section>
+</section>
+<section>
+	<section data-markdown>
+		## Hacer-Mientras (do-while)
+	</section>
+
+	<section data-markdown>
+		<script type="text/template">
+		## Hacer-Mientras (do-while): Definición
+
+		Esta estructura es similar a la estructura while, es usualmente utilizada cuando se sabe con anticipación que las instrucciones en el alcance del ciclo se ejecutarán al menos una vez.
+
+		<!-- .element: class="fragment" -->
+		En esta estructura cíclica la verificación de la condición de parada se realiza al final del ciclo.
+		</script>
+	</section>
+
+	<section data-markdown>
+		## Hacer-Mientras (do-while): Esquema en C++
+
+```cpp
+#include &lt;iostream&gt;
+
+using namespace std;
+
+int main()
+{
+	// Instrucciones
+
+	//Variable = //Inicio;
+	do
+	{
+	    // Instruccion 1
+	    // Instruccion 2
+	    // ...
+	    // Instruccion n
+	    //Actualizacion de la Variable
+	}
+	while(//Condicion);
+
+	// Mas instrucciones
+
+	return 0;
+}
+```
+	</section>
+
+	<section>
+		<h2>Hacer-Mientras (do-while): Ejemplo</h2>
+
+		<p>
+			Calcular la suma de los primeros \(n\) números naturales positivos, es decir, calcular el valor de la expresión:
+		</p>
+
+		<p class="fragment">
+			$$1 + 2 + 3 + \dots + (n - 1) + n$$
+		</p>
+
+		<p class="fragment">
+			que abreviadamante se escribe como:
+		</p>
+
+		<p class="fragment">
+			$$\sum\limits_{i = 1}^{n} i$$
+		</p>
+	</section>
+
+	<section data-markdown>
+		## Hacer-Mientras (do-while): Ejemplo en C++
+
+```cpp
+#include &lt;iostream&gt;
+
+using namespace std;
+
+int suma(int n)
+{
+	int s = 0;
+
+	int i = 1;
+	do
+	{
+	    s += i;
+	    i++;
+	}
+	while(i <= n);
+	return s;
+}
+
+int main()
+{
+	int n = 0;
+	int y = 0;
+	cout << "Ingrese un numero: \t";
+	cin >> n;
+	y = suma(n);
+	cout << "La suma de los numeros desde 1";
+	cout << " hasta " << n << " es: " << y << endl;
+
+	return 0;
+}
+```
+	</section>
+
+	<section>
+		<h2>Hacer-Mientras (do-while): Ejemplo</h2>
+
+		<p>
+			En la construcción de estas funciones aparecen dos variables que tienen una connotación muy importante:
+		</p>
+
+		<ul>
+			<li class="fragment">
+				La variable \(i\) juega el rol de una variable contadora ya que permite llevar el conteo de cuantos ciclos se han efectuado.
+			</li>
+			<li class="fragment">
+				La variable \(s\) juega el rol de variable acumuladora pues en ésta se acumula o almacena el valor parcial que se desea calcular utilizando el ciclo.
+			</li>
+		</ul>
+	</section>
+</section>
+<section>
+	<section data-markdown>
+		## Para-cada (for)
+	</section>
+
+	<section data-markdown>
+		## Para-cada (for): Definición
+
+		Permite ejecutar un bloque de instrucciones para cada uno de los elementos de un conjunto.
+	</section>
+
+	<section data-markdown>
+		## Para-cada (for): Esquema en C++
+
+```cpp
+#include &lt;iostream&gt;
+
+using namespace std;
+
+int main()
+{
+	// Instrucciones
+
+	for(&//Variable : //Conjunto)
+	{
+	    // Instruccion 1
+	    // Instruccion 2
+	    // ...
+	    // Instruccion n
+	}
+
+	// Mas instrucciones
+
+	return 0;
+}
+```
+	</section>
+
+	<section data-markdown>
+		## Para-cada (for): Esquema en Python
+
+```python
+# Instrucciones
+
+for #Variable in #Conjunto:
+	# Instruccion 1
+	# Instruccion 2
+	# ...
+	# Instruccion n
+
+# Mas instrucciones
+```
+	</section>
+
+	<section data-markdown>
+		## Para-cada (for): Ejemplo
+
+		En este ejemplo se usará un ciclo para-cada que cuente el número de elementos pares de un conjunto dado.
+	</section>
+
+	<section data-markdown>
+		## Para-cada (for): Ejemplo en C++
+
+```cpp
+#include &lt;iostream&gt;
+
+using namespace std;
+
+bool esPar(int n)
+{
+	return n % 2 == 0;
+}
+
+int main()
+{
+	int c[] = {0, -2, -1, 30, 75};
+	int t = 0;
+	for(int &n : c)
+	{
+	    if(esPar(n))
+	    {
+	        t++;
+	    }
+	}
+	cout << "La cantidad de numeros pares en ";
+	cout << "el conjunto dado es: " << t << endl;
+
+	return 0;
+}
+```
+	</section>
+
+	<section data-markdown>
+		## Para (for): Ejemplo en Python
+
+```python
+def esPar(n):
+	return n % 2 == 0
+
+c = [0, -2, -1, 30, 75]
+t = 0;
+for n in c:
+	if esPar(n):
+	    t += 1
+print("La cantidad de numeros pares en ", end="")
+print("el conjunto dado es: " + str(t))
+```
+	</section>
+</section>
+<section>
+	<section data-markdown>
+		## Ciclos anidados
+	</section>
+
+	<section data-markdown>
+		## Ciclos anidados: Ejemplo en C++
+
+```cpp
+#include &lt;iostream&gt;
+
+using namespace std;
+
+void imprimir(int a, int b)
+{
+	for(int i = a; i <= b; i++)
+	{
+	    for(int j = 1; j <= 12; j++)
+	    {
+	        cout << j << "/" << i << endl;
+	    }
+	}
+}
+
+int main()
+{
+	int a = 0;
+	int b = 0;
+	cout << "Ingrese el primer año (yy): \t";
+	cin >> a;
+	cout << "Ingrese el segundo año (yy): \t";
+	cin >> b;
+	imprimir(a, b);
+
+	return 0;
+}
+```
+	</section>
+
+	<section data-markdown>
+		## Ciclos anidados: Ejemplo en Python
+
+```python
+def imprimir(a, b):
+	for i in range(a, b + 1):
+	    for j in range(1, 13):
+	        print(str(j) + "/" + str(i))
+
+a = int(input("Ingrese el primer año (yy): \t"))
+b = int(input("Ingrese el segundo año (yy): \t"))
+imprimir(a, b)
+```
+	</section>
+</section>
+<section data-markdown>
+	# Declaraciones particulares
+</section>
+<section>
+	<section data-markdown>
+		## Romper (break)
+	</section>
+
+	<section data-markdown>
+		## Romper (break): Definición
+
+		Esta sentencia termina la ejecución de un ciclo.
+	</section>
+
+	<section data-markdown>
+		## Romper (break): Ejemplo
+
+		Imprimir los números enteros en un intervalo dado.
+	</section>
+
+	<section data-markdown>
+		## Romper (break): Ejemplo en C++
+
+```cpp
+#include &lt;iostream&gt;
+
+using namespace std;
+
+void imprimir(int a, int b)
+{
+	while(a <= b)
+	{
+	    cout << a << endl;
+	    a++;
+	}
+}
+
+int main()
+{
+	int a = 0;
+	int b = 0;
+	cout << "Ingrese un numero: \t";
+	cin >> a;
+	cout << "Ingrese un numero: \t";
+	cin >> b;
+	imprimir(a, b);
+
+	return 0;
+}
+```
+	</section>
+
+	<section data-markdown>
+		## Romper (break): Ejemplo en Python
+
+```python
+def imprimir(a, b):
+	while a <= b:
+	    print(str(a))
+	    a += 1
+
+a = int(input("Ingrese un numero: \t"))
+b = int(input("Ingrese un numero: \t"))
+imprimir(a, b)
+```
+	</section>
+
+	<section data-markdown>
+		## Romper (break): Ejemplo en C++
+
+```cpp
+#include &lt;iostream&gt;
+
+using namespace std;
+
+void imprimir(int a, int b)
+{
+	while(a <= b)
+	{
+	    if(a == 0)
+	    {
+	        break;
+	    }
+	    cout << a << endl;
+	    a++;
+	}
+}
+
+int main()
+{
+	int a = 0;
+	int b = 0;
+	cout << "Ingrese un numero: \t";
+	cin >> a;
+	cout << "Ingrese un numero: \t";
+	cin >> b;
+	imprimir(a, b);
+
+	return 0;
+}
+```
+	</section>
+
+	<section data-markdown>
+		## Romper (break): Ejemplo en Python
+
+```python
+def imprimir(a, b):
+	while a <= b:
+	    if a == 0:
+	        break
+	    print(str(a))
+	    a += 1
+
+a = int(input("Ingrese un numero: \t"))
+b = int(input("Ingrese un numero: \t"))
+imprimir(a, b)
+```
+	</section>
+</section>
+<section>
+	<section data-markdown>
+		## Continuar (continue)
+	</section>
+
+	<section data-markdown>
+		## Continuar (continue): Definición
+
+		Esta sentencia obliga a ejecutar la siguiente iteración del ciclo.
+	</section>
+
+	<section data-markdown>
+		## Continuar (continue): Ejemplo
+
+		En este ejemplo se usará la sentencia continuar en un ciclo para-cada que cuente el número de elementos pares de un conjunto dado.
+	</section>
+
+	<section data-markdown>
+		## Continuar (continue): Ejemplo en C++
+
+```cpp
+#include &lt;iostream&gt;
+
+using namespace std;
+
+bool esPar(int n)
+{
+	return n % 2 == 0;
+}
+
+int main()
+{
+	int c[] = {0, -2, -1, 30, 75};
+	int t = 0;
+	for(int &n : c)
+	{
+	    if(esPar(n))
+	    {
+	        t++;
+	    }
+	    else
+	    {
+	    	continue;
+	    }
+	}
+	cout << "La cantidad de numeros pares en ";
+	cout << "el conjunto dado es: " << t << endl;
+
+	return 0;
+}
+```
+	</section>
+
+	<section data-markdown>
+		## Continuar (continue): Ejemplo en Python
+
+```python
+def esPar(n):
+	return n % 2 == 0
+
+c = [0, -2, -1, 30, 75]
+t = 0;
+for n in c:
+	if esPar(n):
+	    t += 1
+	else:
+	    continue
+print("La cantidad de numeros pares en ", end="")
+print("el conjunto dado es: " + str(t))
+```
+	</section>
+
+	<section data-markdown>
+		## Continuar (continue): Ejemplo en C++
+
+```cpp
+#include &lt;iostream&gt;
+
+using namespace std;
+
+bool esPar(int n)
+{
+	return n % 2 == 0;
+}
+
+int main()
+{
+	int c[] = {0, -2, -1, 30, 75};
+	int t = 0;
+	for(int &n : c)
+	{
+	    if(!esPar(n))
+	    {
+	        continue;
+	    }
+	    t++;
+	}
+	cout << "La cantidad de numeros pares en ";
+	cout << "el conjunto dado es: " << t << endl;
+
+	return 0;
+}
+```
+	</section>
+
+	<section data-markdown>
+		## Continuar (continue): Ejemplo en Python
+
+```python
+def esPar(n):
+	return n % 2 == 0
+
+c = [0, -2, -1, 30, 75]
+t = 0;
+for n in c:
+	if not esPar(n):
+	    continue
+	t += 1
+print("La cantidad de numeros pares en ", end="")
+print("el conjunto dado es: " + str(t))
+```
+	</section>
+</section>
+
+			</div>
+
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.js"></script>
+
+		<script>
+
+			// Full list of configuration options available at:
+			// https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				// Display controls in the bottom right corner
+				controls: true,
+
+				// Display a presentation progress bar
+				progress: false,
+
+				// Display the page number of the current slide
+				slideNumber: true,
+
+				// Push each slide change to the browser history
+				history: true,
+
+				// Enable keyboard shortcuts for navigation
+				keyboard: true,
+
+				// Enable the slide overview mode
+				overview: true,
+
+				// Vertical centering of slides
+				center: true,
+
+				// Enables touch navigation on devices with touch input
+				touch: true,
+
+				// Loop the presentation
+				loop: false,
+
+				// Change the presentation direction to be RTL
+				rtl: false,
+
+				// Turns fragments on and off globally
+				fragments: true,
+
+				// Flags if the presentation is running in an embedded mode,
+				// i.e. contained within a limited portion of the screen
+				embedded: false,
+
+				// Flags if we should show a help overlay when the questionmark
+				// key is pressed
+				help: true,
+
+				// Number of milliseconds between automatically proceeding to the
+				// next slide, disabled when set to 0, this value can be overwritten
+				// by using a data-autoslide attribute on your slides
+				autoSlide: 0,
+
+				// Stop auto-sliding after user input
+				autoSlideStoppable: true,
+
+				// Enable slide navigation via mouse wheel
+				mouseWheel: false,
+
+				// Hides the address bar on mobile devices
+				hideAddressBar: true,
+
+				// Opens links in an iframe preview overlay
+				previewLinks: false,
+
+				// Transition style
+				transition: 'slide', // default/none/fade/slide/convex/concave/zoom
+
+				// Transition speed
+				transitionSpeed: 'default', // default/fast/slow
+
+				// Transition style for full page slide backgrounds
+				backgroundTransition: 'default', // none/fade/slide/convex/concave/zoom
+
+				// Number of slides away from the current that are visible
+				viewDistance: 3,
+
+				// Parallax background image
+				parallaxBackgroundImage: '', // e.g. "'https://s3.amazonaws.com/hakim-static/reveal-js/reveal-parallax-1.jpg'"
+
+				// Parallax background size
+				parallaxBackgroundSize: '', // CSS syntax, e.g. "2100px 900px"
+
+				// Optional reveal.js plugins
+				dependencies: [
+				// Cross-browser shim that fully implements classList - https://github.com/eligrey/classList.js/
+				{ src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+
+				// Interpret Markdown in <section> elements
+				{ src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+				{ src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+
+				// Syntax highlight for <code> elements
+				{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+
+				// Zoom in and out with Alt+click
+				{ src: 'plugin/zoom-js/zoom.js', async: true },
+
+				// Speaker notes
+				{ src: 'plugin/notes/notes.js', async: true },
+
+				// Remote control your reveal.js presentation using a touch device
+				{ src: 'plugin/remotes/remotes.js', async: true },
+
+				// MathJax
+				{ src: 'plugin/math/math.js', async: true }
+				]
+			});
+
+		</script>
+
+	</body>
+</html>
